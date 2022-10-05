@@ -4,13 +4,10 @@ import com.example.appointmentmanagement.model.Appointment;
 import com.example.appointmentmanagement.model.dto.AppointmentDTO;
 import com.example.appointmentmanagement.repository.AppointmentRepository;
 import com.example.appointmentmanagement.utility.AppointmentDtoToAppointment;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,12 +61,13 @@ public class AppointmentServiceImpl {
     }
 
     private String updateData(Appointment oldAppointment, AppointmentDTO appointmentDTO) {
-        if(appointmentDTO.getDuration()==null || appointmentDTO.getDuration().isEmpty() || Long.valueOf(appointmentDTO.getDuration())<=0){
+        if(appointmentDTO.getDuration()==null || appointmentDTO.getDuration().isEmpty() || Float.valueOf(appointmentDTO.getDuration())<=0){
             return "Duration can not be null, less then or equals to 0 ";
         }
         if(!appointmentDTO.getStartTime().isEmpty())  oldAppointment.setStartTime(appointmentDTO.getStartTime());
         if(!appointmentDTO.getDate().isEmpty()) oldAppointment.setDate(appointmentDTO.getDate());
         if(!appointmentDTO.getPurpose().isEmpty()) oldAppointment.setPurpose(appointmentDTO.getPurpose());
+        oldAppointment.setDuration(appointmentDTO.getDuration());
         appointmentRepository.save(oldAppointment);
         logger.info("updated the appointment {}"+oldAppointment);
         return "Appointment Updated..";
